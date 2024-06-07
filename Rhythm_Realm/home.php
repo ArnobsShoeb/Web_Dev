@@ -56,7 +56,7 @@ $conn->close();
         <script src="Scripts/slideshow.js"></script>
     </header>
     <nav>
-        <a href="http://localhost/Rhythm_Realm/index.php">Home</a>
+        <a href="http://localhost/Rhythm_Realm/home.php">Home</a>
         <a href="http://localhost/Rhythm_Realm/songs.php">Songs</a>
         <a href="http://localhost/Rhythm_Realm/albums.php">Albums</a>
         <a href="http://localhost/Rhythm_Realm/about.php">About</a>
