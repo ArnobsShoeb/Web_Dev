@@ -1,0 +1,172 @@
+* {
+    box-sizing: border-box;
+    margin: 0px;
+    
+}
+header h1 {
+    text-align: center;
+    background: linear-gradient(to bottom, rgba(87, 157, 232, 0.679), #100d0f, rgb(22, 30, 101));
+    color: rgb(255, 255, 255);
+    
+
+}
+header h1:hover{
+    color: rgb(216, 51, 51);
+}
+
+
+nav {
+    background-color: rgb(243, 219, 101);
+    height: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 4fr 1fr;
+    grid-gap: 20px;
+    place-items:center;
+    overflow: hidden;
+    border: 2px solid black;
+    
+
+}
+nav a{
+    padding: 10px 30px 10px 30px;
+    font-size: 30px;
+    color: rgb(6, 0, 0);
+    overflow: hidden;
+    text-decoration: None;
+    font-size: 20px;
+    border-color: black;
+    border: 4px;
+    border-radius: 7px;
+    font-weight: 900;
+    
+}
+nav a:hover{
+    color: rgb(251, 250, 250);
+    font-size: 31px;
+}
+
+.container{
+    margin-left: 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 800px;
+    grid-gap: 40px;
+    
+    
+}
+.submit_button{
+    background-color: rgb(74, 151, 43);
+    font-size: 20px;
+    padding: 10px 10px 10px 10px;
+    font-weight: 400;
+    border: 1px solid black;
+    border-color: black;
+    border-radius: 4px;
+    width: 100px;
+}
+.submit_button:hover{
+    cursor:grab;
+    background-color: rgb(34, 195, 34) ;
+    border-radius: 8px;
+    color: white;
+}
+.btc{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    left: 300px;
+    padding: 10px 0 10px 0;
+    overflow: hidden;
+    
+}
+h2{
+    padding: 20px 0px 20px 0px;
+    border: 3px solid black;
+    padding: 0 10px 0 10px;
+    color: white;
+    background-color: rgb(40, 68, 124);
+    border-radius: 4px;
+    
+}
+.container form p{
+    padding: 20px 0 20px 40px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;font-weight: bold;
+
+    
+    
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="Usertype"]{
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    margin-left:40px;
+    width: 50%;
+}
+.sgnup{
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+
+}
+footer{
+    background-color: rgb(8, 8, 8);
+    padding: 20px 0 20px 0;
+    display: flex;
+    justify-content: center;
+}
+footer a{
+    padding: 10px 30px 10px 30px;
+    font-size: 30px;
+    color: rgb(254, 252, 252);
+    overflow: hidden;
+    text-decoration: None;
+    font-size: 10px;
+    border-color: black;
+    border: 50;
+    border-radius: 7px;
+    font-weight: 400;
+}
+.hr{
+    width: 70%;
+}
+.rightportion{
+    position: relative;
+    
+}
+.picportion{
+    padding: 40px 20px 40px 40px;
+    
+}
+.picclass{
+    border-radius: 10%;
+    border: 3px solid yellow;
+}
+main{
+    background: linear-gradient(to bottom, rgba(87, 157, 232, 0.679), #ff69b4, pink);
+}
+p{
+    color: rgb(1, 1, 1);
+}
+
+.slideshow-container {
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  .slideshow-container img {
+    display: none; 
+    width: 100%;
+    height: auto;
+  }
+  
+
+  
+  

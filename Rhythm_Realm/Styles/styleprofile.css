@@ -1,0 +1,181 @@
+* {
+    box-sizing: border-box;
+    margin: 0px;
+    
+}
+header h1 {
+    text-align: center;
+    height: 200px;
+    padding-top: 90px;
+    background: black;
+    color: rgb(255, 255, 255);
+    
+
+}
+header h1:hover{
+    color: rgb(216, 51, 51);
+}
+
+
+nav {
+    background-color: rgb(243, 219, 101);
+    height: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 4fr 1fr;
+    grid-gap: 20px;
+    place-items:center;
+    overflow: hidden;
+    border: 2px solid black;
+    
+
+}
+nav a{
+    padding: 10px 30px 10px 30px;
+    font-size: 30px;
+    color: rgb(6, 0, 0);
+    overflow: hidden;
+    text-decoration: None;
+    font-size: 20px;
+    border-color: black;
+    border: 4px;
+    border-radius: 7px;
+    font-weight: 900;
+    
+}
+nav a:hover{
+    color: rgb(251, 250, 250);
+    font-size: 31px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure the page takes at least the viewport height */
+    margin: 0;
+}
+    
+h2{
+    padding: 20px 0px 20px 0px;
+    border: 3px solid black;
+    padding: 0 10px 0 10px;
+    color: white;
+    background-color: rgb(40, 68, 124);
+    border-radius: 4px;
+    text-align: center;
+    background-color: #3498db;
+    
+}
+.container form p{
+    padding: 20px 0 20px 40px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;font-weight: bold;
+
+    
+    
+}
+
+
+
+.profile{
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+
+}
+footer{
+    background-color: rgb(8, 8, 8);
+    padding: 20px 0 20px 0;
+    display: flex;
+    justify-content: center;
+}
+footer a{
+    padding: 10px 30px 10px 30px;
+    font-size: 30px;
+    color: rgb(254, 252, 252);
+    overflow: hidden;
+    text-decoration: None;
+    font-size: 10px;
+    border-color: black;
+    border: 50;
+    border-radius: 7px;
+    font-weight: 400;
+}
+
+main {
+    flex-grow: 1; /* Expand to fill available space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(87, 157, 232, 0.679), #ff69b4, pink);
+}
+
+p{
+    color: rgb(1, 1, 1);
+    padding-bottom: 20px;
+}
+/* Styles for profile section */
+.profile-section {
+    background-color: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    height: 600px;
+    padding-bottom: 80px;
+}
+
+.profile-section h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    background:  rgb(192, 242, 255);
+    color: rgb(0, 0, 0);
+}
+
+.profile-info {
+    margin: 20px 0;
+    background:  rgb(192, 242, 255);
+}
+
+.profile-info p {
+    font-size: 30px;
+    margin: 15px 0;
+    padding-top: 50px;
+    text-align: center;
+    background:  rgb(192, 242, 255);
+
+}
+
+/* Style for "Back to Home" link */
+.back-to-home {
+    display: block;
+    margin: 0 auto; /* Center horizontally */
+    background-color: #3498db;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    margin-left: 600px;
+    margin-right: 600px;
+}
+
+.back-to-home:hover {
+    background-color: #2980b9;
+}
+
+h3{
+    background-color: rgb(23, 185, 23);
+    text-align: center;
+    margin-right: 10px;
+    margin-left: 1200px;
+    border: 2px solid black;
+    border-radius: 5%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: xx-large;
+    color: aliceblue;
+}
+  
+  

@@ -1,0 +1,254 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+body {
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f2f2f2;
+}
+header  {
+    background-color: #2c3e50;
+    color: #fff;
+    text-align: center;
+    padding-bottom: 50px;
+}
+header:hover{
+    color: red;
+}
+.container a {
+    background-color: lightskyblue;
+    font-size: xx-large;
+    padding: 10px;
+    border: 2px solid lightblue;
+    border-radius: 5%;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+
+
+nav {
+    background-color: #f3db65;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 2px solid black;
+}
+
+nav a {
+    font-size: 18px;
+    text-decoration: none;
+    color: #060000;
+    padding: 10px 20px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+nav a:hover {
+    background-color: #060000;
+    color: white;
+}
+main{
+    background: linear-gradient(to bottom, rgba(87, 157, 232, 0.679), #ff69b4, pink);
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 80px;
+}
+
+ h2 {
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.707);
+    color: white;
+    border-radius: 5px;
+}
+
+.leftrow1 {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: rgba(8, 6, 6, 0.794);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.leftrow1 a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.leftrow1 a:hover {
+    color: #060000;
+    
+}
+
+.albumimage {
+    border-radius: 10%;
+    border: 10px solid rgba(245, 249, 16, 0.751);
+    overflow: hidden;
+    height: 250px;
+    width: 250px;
+}
+
+
+
+footer{
+    background-color: rgb(8, 8, 8);
+    padding: 20px 0 20px 0;
+    display: flex;
+    justify-content: center;
+}
+footer a{
+    padding: 10px 30px 10px 30px;
+    font-size: 30px;
+    color: rgb(254, 252, 252);
+    overflow: hidden;
+    text-decoration: None;
+    font-size: 10px;
+    border-color: black;
+    border: 50;
+    border-radius: 7px;
+    font-weight: 400;
+}
+footer a:hover {
+    color: #bdc3c7;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: #ccc;
+    margin: 10px 0;
+}
+/* ... (your existing styles) ... */
+
+.playlist {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.playlist h3 {
+    margin-bottom: 10px;
+    color: #060000;
+}
+
+.add-songs-link {
+    display: inline-block;
+    background-color: #060000;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.add-songs-link:hover {
+    background-color: #040707;
+}
+.ll{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.llm{
+    background-color: #65baf38b;
+    padding: 10px 10px 10px 10px;
+    font-size: x-large;
+    text-align: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    color: #040707;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.fcontainer {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.fcontainer label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.fcontainer input[type="text"],
+.fcontainer input[type="number"],
+.fcontainer input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.fcontainer button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.fcontainer button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+.ll a{
+    color: #040707;
+    transition: 1s ease;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.ll{
+    grid-gap: 10px;
+}
+.ll a:hover{
+    font-size: xx-large;
+    color: #b3d4f7;
+    transition: 0.5s ease;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Creates 4 equal columns */
+    gap: 10px; /* Gap between the boxes */
+    width: 100%; /* Adjust as needed */
+    max-width: 1400px; /* Adjust as needed */
+    margin: 0 auto; /* Centers the grid horizontally */
+  }
+  
+  .box {
+    background-color: #fefa00;
+    color: rgb(215, 30, 30);
+    -webkit-text-stroke: 1px black;
+    padding: 20px;
+    text-align: center;
+    font-size: 30px;
+  }
