@@ -1,6 +1,6 @@
 import React from 'react'
 import loginpic from "../images/loginpic.jpg"
-
+import { Link } from 'react-router-dom'
 export default function Login() {
   return (
     <div>
@@ -41,8 +41,8 @@ export default function Login() {
                   </div>
 
                   <a className="small text-muted" href="#!">Forgot password?</a>
-                  <p className="mb-5 pb-lg-2" style={{color: "#393f81"}}>Don't have an account? <a href="#!"
-                      style={{color: "#393f81"}}>Register here</a></p>
+                  <p className="mb-5 pb-lg-2" style={{color: "#393f81"}}>Don't have an account? <Link to="/signup"
+                      style={{color: "#393f81"}}>Register here</Link></p>
                   
                 </form>
 
