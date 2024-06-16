@@ -9,6 +9,14 @@ const startServer = async () => {
   app.get('/', (req, res) => {
     res.send('Hello World!');
   });
+  app.use((req,res,next)=>{
+    res.setHeader("Access-Control-Allow-Origin","http://localhost:3000");
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin,X-Requested-with,Content-Type,Accept"
+    );
+    next();
+  })
   app.use(express.json());
   app.use('/api',require("./Routes/CreateUser"));
   app.listen(port, () => {
@@ -17,11 +25,3 @@ const startServer = async () => {
 };
 
 startServer();
-
-// {
-//     "firstname":"Shoeb",
-//     "lastname":"Mahfuz",
-//     "email":"arnobshoeb@gmail.com",
-//     "password":"123456",
-//     "usertype":"Seller"
-//     }
