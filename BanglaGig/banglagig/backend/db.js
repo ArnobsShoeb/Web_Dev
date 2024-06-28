@@ -3,14 +3,12 @@ const mongoURI = 'mongodb://arnobshoeb:banglagig123@ac-ngevuoc-shard-00-00.krdl1
 
 const mongoDB = async () => {
   try {
-    await mongoose.connect(mongoURI, {
-      useNewUrlParser: true
-    });
+    await mongoose.connect(mongoURI);
     console.log("Connected to MongoDB");
 
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
-    process.exit(1); // Exit the process with failure
+    process.exit(1); 
   }
 };
 

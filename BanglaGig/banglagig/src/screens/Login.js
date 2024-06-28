@@ -52,13 +52,15 @@ let navigate = useNavigate()
                   <h5 className="fw-normal mb-3 pb-3" style={{letterSpacing: "1px"}}>Sign into your account</h5>
 
                   <div data-mdb-input-init className="form-outline mb-4">
+                  <label className="form-label" >Email address</label>
                     <input type="email" id="form2Example17" className="form-control form-control-lg" name='email' value={credentials.email} onChange={onChange} />
-                    <label className="form-label" >Email address</label>
+                    
                   </div>
 
                   <div data-mdb-input-init className="form-outline mb-4">
+                  <label className="form-label" >Password</label>
                     <input type="password" id="form2Example27" className="form-control form-control-lg" name='password' value={credentials.password} onChange={onChange} />
-                    <label className="form-label" >Password</label>
+                    
                   </div>
 
                   <div className="pt-1 mb-4">
