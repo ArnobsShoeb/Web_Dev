@@ -18,11 +18,7 @@ const TokenSchema = new Schema({
     date: {
         type: Date,
         default: Date.now,
-    },
-    verified: {
-        type: Boolean,
-        default: false,
-    },
+    }
 });
 
 module.exports = mongoose.model('Token', TokenSchema);

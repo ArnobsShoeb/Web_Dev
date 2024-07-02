@@ -35,7 +35,7 @@ function ForgotPasswordModal({ show, handleClose }) {
 
     const handleVerifyOtp = async () => {
         try {
-            const response = await fetch('http://localhost:4000/api/reset-password', {
+            const response = await fetch('http://localhost:4000/api/verify-otp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
