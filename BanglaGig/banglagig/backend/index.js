@@ -19,6 +19,8 @@ const startServer = async () => {
   })
   app.use(express.json());
   app.use('/api',require("./Routes/CreateUser"));
+  app.use('/api', require('./Routes/SendResetEmail'));
+  app.use('/api', require('./Routes/VerifyOTP'));
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
   });
