@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import backgroundImg from '../images/background.jpg'; // Adjust the path to your image file
 
 export default function UserDetails() {
     const [user, setUser] = useState(null);
@@ -37,18 +38,35 @@ export default function UserDetails() {
     return (
         <>
             <Navbar />
-            <div className="container d-flex justify-content-center align-items-center min-vh-100">
-                <div className="card bg-primary text-white p-4 rounded">
-                    {user ? (
-                        <>
-                            <h1 className="display-4">{user.firstname} {user.lastname}</h1>
-                            <p className="lead">Email: {user.email}</p>
-                            <p>User Type: {user.usertype}</p>
-                            <p>Joined on: {new Date(user.date).toLocaleDateString()}</p>
-                        </>
-                    ) : (
-                        <p>Loading...</p>
-                    )}
+            <div
+                className="container-fluid d-flex justify-content-center align-items-center"
+                style={{
+                    backgroundImage: `url(${backgroundImg})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    minHeight: '100vh', // Cover the entire viewport height
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <div className="card" style={{ maxWidth: '600px', width: '90%', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+                    <div className="card-body text-light">
+                        {user ? (
+                            <>
+                                <p className="display-6 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>User Name: {user.firstname} {user.lastname}</p>
+                                <p className="lead text-center">Email: {user.email}</p>
+                                <p className="text-center">User Type:  {user.usertype}</p>
+                                <p className="text-center">Joined on: {new Date(user.date).toLocaleDateString()}</p>
+                            </>
+                        ) : (
+                            <div className="d-flex justify-content-center align-items-center" style={{ height: '200px' }}>
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
             <Footer />
