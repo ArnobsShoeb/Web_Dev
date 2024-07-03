@@ -62,9 +62,9 @@ export default function Navbar() {
                 </Link>
               </li>
               </ul>
-              <div className="btn text-white mt-3" >
+              <div className="btn text-white text-decoration-none mt-2 fs-3" >
               {isLoggedIn ? 
-                ( <Link to="/profile">{username}</Link> ) : 
+                ( <Link className="text-decoration-none text-white" to="/profile">{username}</Link> ) : 
                 (<p >Login in Here </p>)
             }
 
