@@ -15,10 +15,6 @@ router.post('/verify-otp', async (req, res) => {
         }
 
         
-        // const tokenExpireTime = new Date(token.date).getTime() + token.expireIn * 60000; // Convert minutes to milliseconds
-        // if (Date.now() > tokenExpireTime) {
-        //     return res.status(400).json({ message: 'OTP expired. Please request a new OTP.' });
-        // }
 
         // Update the user's password
         const user = await User.findOne({ email });

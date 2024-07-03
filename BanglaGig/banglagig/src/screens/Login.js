@@ -24,6 +24,9 @@ export default function Login() {
             alert("Enter Valid Credentials");
         }
         if (json.success) {
+            localStorage.setItem('token', json.token);
+            localStorage.setItem('usertype', json.usertype);
+            localStorage.setItem('firstname', json.firstname);
             navigate("/");
         }
     }
