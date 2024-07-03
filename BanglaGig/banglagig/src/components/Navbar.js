@@ -44,25 +44,25 @@ export default function Navbar() {
             <ul className="navbar-nav me-auto mb-2">
               <li className="nav-item">
                 <Link
-                  className="nav-link active fs-5"
+                  className="nav-link active  mt-3 "
                   aria-current="page"
                   to="/"
                 >
                   Home
                 </Link>
               </li>
-              <li className="nav-item">
+              <li className="nav-item mt-3">
                 <Link className="nav-link" to="/">
                   Features
                 </Link>
               </li>
-              <li className="nav-item">
+              <li className="nav-item mt-3">
                 <Link className="nav-link" to="/">
                   Pricing
                 </Link>
               </li>
               </ul>
-              <div className="btn bg-white text-Dark mx-1" >
+              <div className="btn text-white mt-3" >
               {isLoggedIn ? 
                 ( <Link to="/profile">{username}</Link> ) : 
                 (<p >Login in Here </p>)
