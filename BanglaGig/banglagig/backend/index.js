@@ -22,6 +22,7 @@ const startServer = async () => {
   app.use('/api',require("./Routes/LoginUser"));
   app.use('/api', require('./Routes/SendResetEmail'));
   app.use('/api', require('./Routes/VerifyOTP'));
+  app.use('/api', require('./Routes/FetchUserData'));
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
   });
