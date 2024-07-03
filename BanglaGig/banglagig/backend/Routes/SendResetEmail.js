@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const Token = require('../models/Token'); // Import your Token model
 
-// POST /api/send-reset-mail
+
 router.post('/send-reset-mail', async (req, res) => {
     const { email } = req.body;
 
@@ -17,8 +17,6 @@ router.post('/send-reset-mail', async (req, res) => {
 
         // Generate OTP 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-        // Save the OTP to the user (you can store it in the database, here for simplicity we assume it's stored directly)
         user.otp = otp;
         await user.save();
 
@@ -26,11 +24,11 @@ router.post('/send-reset-mail', async (req, res) => {
         const token = new Token({
             email: user.email,
             otp,
-            expireIn: 3600, // Token expiration time in seconds (adjust as needed)
+            expireIn: 3600, 
         });
         await token.save();
 
-        // Create a transporter for sending email
+        // Transporter for sending email
         const transporter = nodemailer.createTransport({
             host:'smtp.gmail.com',
             port: 465,
