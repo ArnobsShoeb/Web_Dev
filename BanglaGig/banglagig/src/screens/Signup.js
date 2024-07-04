@@ -1,4 +1,6 @@
 import React,{useState} from 'react';
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 import signuppic from "../images/signuppic.jpg";
 import { Link } from 'react-router-dom';
 export default function Signup() {
@@ -91,6 +93,19 @@ export default function Signup() {
                       <div className="d-flex justify-content-center">
                         <button type="submit" className="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
                       </div>
+                      <div>
+                    <GoogleLogin
+                    onSuccess={credentialResponse => {
+                      var decoded_response = jwtDecode(credentialResponse.credential);
+                      console.log(decoded_response.email);
+                      credentials.email = decoded_response.email;
+                      console.log(decoded_response);
+                    }}
+                    onError={() => {
+                      console.log('Login Failed');
+                    }}
+                  />
+                  </div>
                       <p className="text-center text-muted mt-5 mb-0 ">Already have an account? <Link to="/login"
                         className="fw-bold text-body"><u className='text-warning'>Login here</u></Link></p>
                     </form>

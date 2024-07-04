@@ -1,4 +1,6 @@
 import React,{useState} from 'react'
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 import loginpic from "../images/loginpic.jpg"
 import { Link, useNavigate } from 'react-router-dom'
 export default function Login() {
@@ -27,6 +29,7 @@ let navigate = useNavigate()
     const onChange=(event)=>{
         setCredentials({...credentials,[event.target.name]: event.target.value })
     }
+    
   return (
     <div>
         <section className="vh-100" style={{backgroundColor: "#F0F4F8"}}>
@@ -50,7 +53,6 @@ let navigate = useNavigate()
                   </div>
 
                   <h5 className="fw-normal mb-3 pb-3" style={{letterSpacing: "1px"}}>Sign into your account</h5>
-
                   <div data-mdb-input-init className="form-outline mb-4">
                   <label className="form-label" >Email address</label>
                     <input type="email" id="form2Example17" className="form-control form-control-lg" name='email' value={credentials.email} onChange={onChange} />
@@ -66,13 +68,24 @@ let navigate = useNavigate()
                   <div className="pt-1 mb-4">
                     <button data-mdb-button-init data-mdb-ripple-init className="btn btn-dark btn-lg btn-block" type="submit">Login</button>
                   </div>
-
+                  <div>
+                    <GoogleLogin
+                    onSuccess={credentialResponse => {
+                      var decoded_response = jwtDecode(credentialResponse.credential);
+                      console.log(decoded_response.email);
+                      credentials.email = decoded_response.email;
+                      console.log(decoded_response);
+                    }}
+                    onError={() => {
+                      console.log('Login Failed');
+                    }}
+                  />
+                  </div>
                   <a className="small text-muted" href="#!">Forgot password?</a>
                   <p className="mb-5 pb-lg-2" style={{color: "#393f81"}}>Don't have an account? <Link to="/signup"
                       style={{color: "#393f81"}}>Register here</Link></p>
                   
                 </form>
-
               </div>
             </div>
           </div>
