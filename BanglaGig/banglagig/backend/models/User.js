@@ -14,6 +14,7 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         unique: true // Ensure email is unique
+
     },
     password: {
         type: String,
@@ -26,6 +27,18 @@ const UserSchema = new Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    profilePicture: {
+        type: String,
+        default: null
+    },
+    balance:{
+        type:Number,
+        default:0
+    }
+});
+
+
     }
 });
 
