@@ -38,6 +38,8 @@ const startServer = async () => {
     app.use('/api', require('./Routes/SetProPic'));
     app.use('/api', require('./Routes/TopUp'));
     app.use('/api', require('./Routes/SubmitPayment'));
+    
+
 
     // Root route
     app.get('/', (req, res) => {

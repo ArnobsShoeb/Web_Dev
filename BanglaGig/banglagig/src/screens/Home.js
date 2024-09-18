@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Carousel from '../components/Carousel';
 import { Link, useNavigate } from 'react-router-dom';
+import { Modal, Button } from 'react-bootstrap'; // Import Modal and Button from react-bootstrap
 
 export default function Home() {
   const [gigs, setGigs] = useState([]);
@@ -10,6 +11,8 @@ export default function Home() {
   const [message, setMessage] = useState('');
   const [currentPage, setCurrentPage] = useState(1);  // Track the current page
   const [totalPages, setTotalPages] = useState(1);    // Total number of pages
+  const [showModal, setShowModal] = useState(false);  // Modal state
+  const [selectedGig, setSelectedGig] = useState(null); // Selected gig for modal
   const navigate = useNavigate();
   const usertype = localStorage.getItem('usertype');
 
@@ -44,6 +47,27 @@ export default function Home() {
     setCurrentPage(1); // Reset to first page when search term changes
   };
 
+  // Open modal for selected gig
+  const openModal = (gig) => {
+    setSelectedGig(gig);
+    setShowModal(true);
+  };
+
+  // Close modal
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedGig(null);
+  };
+
+  // Handle order button click
+  const handleOrder = () => {
+    if (selectedGig) {
+      // Redirect to order page or handle order logic
+      console.log('Order placed for:', selectedGig.title);
+      closeModal();
+    }
+  };
+
   // Go to the next page
   const goToNextPage = () => {
     if (currentPage < totalPages) {
@@ -57,9 +81,6 @@ export default function Home() {
       setCurrentPage(currentPage - 1);
     }
   };
-
-  // Debugging: Verify usertype value
-  console.log('Usertype in Home component:', usertype);
 
   return (
     <div>
@@ -82,14 +103,14 @@ export default function Home() {
         {/* Conditional Button */}
         {usertype === "Seller" && (
           <div className="text-center mt-4">
-            <Link className="btn btn-primary btn-lg" to="/post-gig">
+            <Link className="btn btn-primary btn-lg" to="http://localhost:3000/postgig">
               Post Your Gig
             </Link>
           </div>
         )}
         {usertype === "Buyer" && (
           <div className="text-center mt-4">
-            <Link className="btn btn-primary btn-lg" to="/payment">
+            <Link className="btn btn-primary btn-lg" to="http://localhost:3000/payment">
               Go to Payment
             </Link>
           </div>
@@ -103,10 +124,9 @@ export default function Home() {
         <div className="row">
           {gigs.map((gig) => (
             <div className="col-md-4 mb-4" key={gig._id}>
-              <div className="card">
+              <div className="card" onClick={() => openModal(gig)} style={{ cursor: 'pointer' }}>
                 <div className="card-body">
                   <h5 className="card-title">{gig.title}</h5>
-                  <p className="card-text">{gig.description}</p>
                   <p className="card-text">
                     <strong>Price: </strong>BDT {gig.price}
                   </p>
@@ -134,11 +154,31 @@ export default function Home() {
             Next
           </button>
         </div>
-
-        
       </div>
 
       <Footer />
+
+      {/* Modal for Gig Details */}
+      {selectedGig && (
+        <Modal show={showModal} onHide={closeModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>{selectedGig.title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p><strong>Price:</strong> BDT {selectedGig.price}</p>
+            <p><strong>Description:</strong> {selectedGig.description}</p>
+            <p><strong>Seller:</strong> {selectedGig.email}</p> {/* Ensure seller email is returned in the API */}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={closeModal}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleOrder}>
+              Order Gig
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
     </div>
   );
 }
