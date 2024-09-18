@@ -82,6 +82,28 @@ export default function Home() {
     }
   };
 
+  // Inline CSS styles
+  const styles = {
+    cardImg: {
+      width: '100%',
+      height: '200px',
+      objectFit: 'cover',
+    },
+    imgFluid: {
+      width: '100%',
+      height: 'auto',
+      maxHeight: '400px',
+      objectFit: 'cover',
+    },
+    paginationControls: {
+      marginTop: '1rem',
+      textAlign: 'center',
+    },
+    container: {
+      marginTop: '1rem',
+    },
+  };
+
   return (
     <div>
       <Navbar />
@@ -103,14 +125,14 @@ export default function Home() {
         {/* Conditional Button */}
         {usertype === "Seller" && (
           <div className="text-center mt-4">
-            <Link className="btn btn-primary btn-lg" to="http://localhost:3000/postgig">
+            <Link className="btn btn-primary btn-lg" to="/postgig">
               Post Your Gig
             </Link>
           </div>
         )}
         {usertype === "Buyer" && (
           <div className="text-center mt-4">
-            <Link className="btn btn-primary btn-lg" to="http://localhost:3000/payment">
+            <Link className="btn btn-primary btn-lg" to="/payment">
               Go to Payment
             </Link>
           </div>
@@ -125,6 +147,7 @@ export default function Home() {
           {gigs.map((gig) => (
             <div className="col-md-4 mb-4" key={gig._id}>
               <div className="card" onClick={() => openModal(gig)} style={{ cursor: 'pointer' }}>
+                <img src={gig.imageUrl} alt={gig.title} style={styles.cardImg} /> {/* Display image with fixed size */}
                 <div className="card-body">
                   <h5 className="card-title">{gig.title}</h5>
                   <p className="card-text">
@@ -137,7 +160,7 @@ export default function Home() {
         </div>
 
         {/* Pagination Controls */}
-        <div className="pagination-controls mt-4 text-center">
+        <div className="pagination-controls mt-4 text-center" style={styles.paginationControls}>
           <button
             className="btn btn-secondary"
             onClick={goToPreviousPage}
@@ -165,9 +188,10 @@ export default function Home() {
             <Modal.Title>{selectedGig.title}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            <img src={selectedGig.imageUrl} alt={selectedGig.title} style={styles.imgFluid} /> {/* Display image with fixed size */}
             <p><strong>Price:</strong> BDT {selectedGig.price}</p>
             <p><strong>Description:</strong> {selectedGig.description}</p>
-            <p><strong>Seller:</strong> {selectedGig.email}</p> {/* Ensure seller email is returned in the API */}
+            <p><strong>Seller:</strong> {selectedGig.email}</p>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={closeModal}>

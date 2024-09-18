@@ -21,8 +21,14 @@ router.get('/getgigs', async (req, res) => {
     // Get total documents for the pagination calculation
     const count = await Gig.countDocuments(query);
 
+    // Map over the gigs to include the full image URL
+    const gigsWithImageUrl = gigs.map(gig => ({
+      ...gig.toObject(),
+      imageUrl: `http://localhost:4000/${gig.imageUrl}` // Construct the full URL for the image
+    }));
+
     res.json({
-      gigs,
+      gigs: gigsWithImageUrl,
       totalPages: Math.ceil(count / limit),
       currentPage: page,
     });

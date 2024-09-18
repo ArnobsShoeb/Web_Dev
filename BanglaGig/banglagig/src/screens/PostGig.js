@@ -7,6 +7,7 @@ export default function PostGig() {
     title: '',
     description: '',
     price: '',
+    image: null,  // State for the file
   });
   const [message, setMessage] = useState('');
 
@@ -17,21 +18,26 @@ export default function PostGig() {
     setGigDetails({ ...gigDetails, [name]: value });
   };
 
+  const handleFileChange = (e) => {
+    setGigDetails({ ...gigDetails, image: e.target.files[0] });  // Set file
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const gigData = {
-      ...gigDetails,
-      email: email,  // Add email to the gig data
-    };
+    const formData = new FormData();
+    formData.append('title', gigDetails.title);
+    formData.append('description', gigDetails.description);
+    formData.append('price', gigDetails.price);
+    formData.append('email', email);
+    if (gigDetails.image) {
+      formData.append('image', gigDetails.image);  // Append image file
+    }
 
     try {
       const response = await fetch('http://localhost:4000/api/postgig', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(gigData),  // Send the gig data including email
+        body: formData,  // Send form data including image
       });
 
       const result = await response.json();
@@ -41,6 +47,7 @@ export default function PostGig() {
           title: '',
           description: '',
           price: '',
+          image: null,
         });
       } else {
         setMessage('Failed to post gig. Please try again.');
@@ -97,6 +104,16 @@ export default function PostGig() {
                   onChange={handleChange}
                   placeholder="Enter price"
                   required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="image" className="form-label">Upload Image</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  id="image"
+                  name="image"
+                  onChange={handleFileChange}
                 />
               </div>
               <button type="submit" className="btn btn-primary w-100">Submit Gig</button>
