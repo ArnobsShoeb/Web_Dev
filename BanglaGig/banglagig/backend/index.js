@@ -36,6 +36,7 @@ const startServer = async () => {
     app.use('/api', require('./Routes/FetchMyGigs'));
     app.use('/api', require('./Routes/PlaceOrder'));
     app.use('/api', require('./Routes/FetchActiveOrders'));
+    app.use('/api', require('./Routes/DeleteGig'));
 
     // Root route
     app.get('/', (req, res) => {

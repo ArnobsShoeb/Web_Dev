@@ -4,7 +4,7 @@ export default function MyGigs() {
   const [gigs, setGigs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const email = localStorage.getItem('email'); // Make sure to save email in localStorage upon login
+  const email = localStorage.getItem('email');
 
   useEffect(() => {
     const fetchGigs = async () => {
@@ -26,6 +26,22 @@ export default function MyGigs() {
     fetchGigs();
   }, [email]);
 
+  const handleDelete = async (gigId) => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/deletegig/${gigId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setGigs(gigs.filter(gig => gig._id !== gigId));
+      } else {
+        const data = await response.json();
+        setError(data.message || 'Failed to delete gig');
+      }
+    } catch (err) {
+      setError('An error occurred while deleting the gig');
+    }
+  };
+
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>My Gigs</h1>
@@ -42,7 +58,12 @@ export default function MyGigs() {
               <p style={styles.price}><strong>Price:</strong> ${gig.price}</p>
               <p style={styles.orderCount}><strong>Orders:</strong> {gig.orderCount}</p>
               <p style={styles.date}><strong>Posted On:</strong> {new Date(gig.createdAt).toLocaleDateString()}</p>
-              
+              <button 
+                onClick={() => handleDelete(gig._id)}
+                style={styles.deleteButton}
+              >
+                Delete Gig
+              </button>
             </div>
           ))}
         </div>
@@ -121,9 +142,15 @@ const styles = {
     color: '#666',
     marginBottom: '10px',
   },
-  status: {
+  deleteButton: {
+    backgroundColor: '#dc3545',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    padding: '10px 20px',
+    cursor: 'pointer',
     fontSize: '1rem',
-    color: '#666',
-    marginBottom: '15px',
+    fontWeight: '600',
+    marginTop: '10px',
   },
 };
