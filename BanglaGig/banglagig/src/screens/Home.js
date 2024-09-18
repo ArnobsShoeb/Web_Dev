@@ -3,10 +3,11 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Carousel from '../components/Carousel';
 import { Link, useNavigate } from 'react-router-dom';
-import { Modal, Button } from 'react-bootstrap'; // Import Modal and Button from react-bootstrap
+import { Modal, Button } from 'react-bootstrap';
 
 export default function Home() {
   const [gigs, setGigs] = useState([]);
+  const [filteredGigs, setFilteredGigs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [message, setMessage] = useState('');
   const [currentPage, setCurrentPage] = useState(1);  // Track the current page
@@ -28,6 +29,7 @@ export default function Home() {
         if (response.ok) {
           const data = await response.json();
           setGigs(data.gigs);
+          setFilteredGigs(data.gigs); // Set the filtered gigs initially
           setTotalPages(data.totalPages); // Set the total pages from the response
         } else {
           setMessage('Failed to load gigs. Please try again.');
@@ -42,8 +44,9 @@ export default function Home() {
   }, [currentPage, searchTerm, navigate]);
 
   // Handle search input change
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    setFilteredGigs(gigs.filter(gig => gig.title.toLowerCase().includes(term.toLowerCase())));
     setCurrentPage(1); // Reset to first page when search term changes
   };
 
@@ -62,7 +65,6 @@ export default function Home() {
   // Handle order button click
   const handleOrder = () => {
     if (selectedGig) {
-      // Redirect to order page or handle order logic
       console.log('Order placed for:', selectedGig.title);
       closeModal();
     }
@@ -107,20 +109,8 @@ export default function Home() {
   return (
     <div>
       <Navbar />
-      <Carousel />
+      <Carousel onSearch={handleSearch} />
 
-      {/* Search bar */}
-      <div className="container mt-4">
-        <div className="input-group mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search gigs..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
-      </div>
       <div>
         {/* Conditional Button */}
         {usertype === "Seller" && (
@@ -140,14 +130,14 @@ export default function Home() {
       </div>
 
       {/* Display gigs */}
-      <div className="container mt-5">
+      <div id="top-gigs" className="container mt-5">
         <h3 className="text-center mb-4">Top Gigs</h3>
         {message && <div className="alert alert-info">{message}</div>}
         <div className="row">
-          {gigs.map((gig) => (
+          {filteredGigs.map((gig) => (
             <div className="col-md-4 mb-4" key={gig._id}>
               <div className="card" onClick={() => openModal(gig)} style={{ cursor: 'pointer' }}>
-                <img src={gig.imageUrl} alt={gig.title} style={styles.cardImg} /> {/* Display image with fixed size */}
+                <img src={gig.imageUrl} alt={gig.title} style={styles.cardImg} />
                 <div className="card-body">
                   <h5 className="card-title">{gig.title}</h5>
                   <p className="card-text">
@@ -188,7 +178,7 @@ export default function Home() {
             <Modal.Title>{selectedGig.title}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <img src={selectedGig.imageUrl} alt={selectedGig.title} style={styles.imgFluid} /> {/* Display image with fixed size */}
+            <img src={selectedGig.imageUrl} alt={selectedGig.title} style={styles.imgFluid} />
             <p><strong>Price:</strong> BDT {selectedGig.price}</p>
             <p><strong>Description:</strong> {selectedGig.description}</p>
             <p><strong>Seller:</strong> {selectedGig.email}</p>
