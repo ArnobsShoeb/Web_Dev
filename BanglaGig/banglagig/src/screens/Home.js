@@ -3,34 +3,37 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Carousel from '../components/Carousel';
 import { Link, useNavigate } from 'react-router-dom';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 export default function Home() {
   const [gigs, setGigs] = useState([]);
   const [filteredGigs, setFilteredGigs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [message, setMessage] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);  // Track the current page
-  const [totalPages, setTotalPages] = useState(1);    // Total number of pages
-  const [showModal, setShowModal] = useState(false);  // Modal state
-  const [selectedGig, setSelectedGig] = useState(null); // Selected gig for modal
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedGig, setSelectedGig] = useState(null);
+  const [orderDeadline, setOrderDeadline] = useState('');
+  const [orderStatus, setOrderStatus] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // New state for success modal
   const navigate = useNavigate();
   const usertype = localStorage.getItem('usertype');
+  const buyerEmail = localStorage.getItem('email'); // Retrieve buyer's email from localStorage
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       navigate('/');
     }
 
-    // Fetch gigs from the backend
     const fetchGigs = async (page = 1, query = '') => {
       try {
         const response = await fetch(`http://localhost:4000/api/getgigs?page=${page}&search=${query}`);
         if (response.ok) {
           const data = await response.json();
           setGigs(data.gigs);
-          setFilteredGigs(data.gigs); // Set the filtered gigs initially
-          setTotalPages(data.totalPages); // Set the total pages from the response
+          setFilteredGigs(data.gigs);
+          setTotalPages(data.totalPages);
         } else {
           setMessage('Failed to load gigs. Please try again.');
         }
@@ -40,51 +43,71 @@ export default function Home() {
       }
     };
 
-    fetchGigs(currentPage, searchTerm); // Fetch gigs initially or when page/searchTerm changes
+    fetchGigs(currentPage, searchTerm);
   }, [currentPage, searchTerm, navigate]);
 
-  // Handle search input change
   const handleSearch = (term) => {
     setSearchTerm(term);
     setFilteredGigs(gigs.filter(gig => gig.title.toLowerCase().includes(term.toLowerCase())));
-    setCurrentPage(1); // Reset to first page when search term changes
+    setCurrentPage(1);
   };
 
-  // Open modal for selected gig
   const openModal = (gig) => {
     setSelectedGig(gig);
     setShowModal(true);
   };
 
-  // Close modal
   const closeModal = () => {
     setShowModal(false);
     setSelectedGig(null);
+    setOrderDeadline('');
+    setOrderStatus('');
   };
 
-  // Handle order button click
-  const handleOrder = () => {
-    if (selectedGig) {
-      console.log('Order placed for:', selectedGig.title);
-      closeModal();
+  const handleOrder = async () => {
+    if (selectedGig && usertype === 'Buyer') {
+      try {
+        const response = await fetch('http://localhost:4000/api/placeorder', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Buyer-Email': buyerEmail, // Pass the buyer's email in headers
+          },
+          body: JSON.stringify({
+            buyerEmail,
+            sellerEmail: selectedGig.email, // Use sellerEmail from gig
+            orderDeadline,
+            gigId: selectedGig._id,
+          }),
+        });
+        if (response.ok) {
+          setOrderStatus('Order placed successfully');
+          closeModal();
+          setShowSuccessModal(true); // Show success modal
+        } else {
+          setOrderStatus('Error placing order');
+        }
+      } catch (error) {
+        console.error('Error placing order:', error);
+        setOrderStatus('Error placing order');
+      }
+    } else {
+      setOrderStatus('Only buyers can place orders');
     }
   };
 
-  // Go to the next page
   const goToNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
 
-  // Go to the previous page
   const goToPreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
-  // Inline CSS styles
   const styles = {
     cardImg: {
       width: '100%',
@@ -118,6 +141,9 @@ export default function Home() {
             <Link className="btn btn-primary btn-lg" to="/postgig">
               Post Your Gig
             </Link>
+            <Link className="btn btn-secondary btn-lg ml-3" to="/myorders">
+              My Orders
+            </Link>
           </div>
         )}
         {usertype === "Buyer" && (
@@ -129,7 +155,6 @@ export default function Home() {
         )}
       </div>
 
-      {/* Display gigs */}
       <div id="top-gigs" className="container mt-5">
         <h3 className="text-center mb-4">Top Gigs</h3>
         {message && <div className="alert alert-info">{message}</div>}
@@ -149,7 +174,6 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Pagination Controls */}
         <div className="pagination-controls mt-4 text-center" style={styles.paginationControls}>
           <button
             className="btn btn-secondary"
@@ -171,7 +195,6 @@ export default function Home() {
 
       <Footer />
 
-      {/* Modal for Gig Details */}
       {selectedGig && (
         <Modal show={showModal} onHide={closeModal}>
           <Modal.Header closeButton>
@@ -182,6 +205,15 @@ export default function Home() {
             <p><strong>Price:</strong> BDT {selectedGig.price}</p>
             <p><strong>Description:</strong> {selectedGig.description}</p>
             <p><strong>Seller:</strong> {selectedGig.email}</p>
+            <Form.Group controlId="orderDeadline">
+              <Form.Label>Order Deadline</Form.Label>
+              <Form.Control
+                type="date"
+                value={orderDeadline}
+                onChange={(e) => setOrderDeadline(e.target.value)}
+              />
+            </Form.Group>
+            {orderStatus && <div className="alert alert-info mt-2">{orderStatus}</div>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={closeModal}>
@@ -193,6 +225,21 @@ export default function Home() {
           </Modal.Footer>
         </Modal>
       )}
+
+      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Success</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>Congratulations!!</h4>
+          <p>Order Successful</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowSuccessModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

@@ -81,9 +81,10 @@ export default function UserDetails() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    position: 'relative', // Ensure that balance box is positioned relative to this container
                 }}
             >
-                <div className="card" style={{ maxWidth: '600px', width: '90%', backgroundColor: 'rgba(255, 255, 255, 0.1)', position: 'relative' }}>
+                <div className="card" style={{ maxWidth: '600px', width: '90%', backgroundColor: 'rgba(255, 255, 255, 0.2)', position: 'relative' }}>
                     <div className="card-body text-light" style={{ paddingTop: '5rem' }}>
                         {profilePicture && (
                             <div className="d-flex justify-content-center" style={{ position: 'absolute', top: '-3rem', width: '100%' }}>
@@ -116,7 +117,6 @@ export default function UserDetails() {
                                 <p className="display-6 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>User Name: {user.firstname} {user.lastname}</p>
                                 <p className="lead text-center">Email: {user.email}</p>
                                 <p className="text-center">User Type: {user.usertype}</p>
-                                <p className="text-center">User Balance: {user.balance}</p>
                                 <p className="text-center">Joined on: {new Date(user.date).toLocaleDateString()}</p>
                                 {user.usertype === 'buyer' && (
                                     <div className="text-center mt-3">
@@ -133,8 +133,31 @@ export default function UserDetails() {
                         )}
                     </div>
                 </div>
+                {user && (
+                    <div style={styles.balanceBox}>
+                        <p style={styles.balanceText}>Balance: ${user.balance}</p>
+                    </div>
+                )}
             </div>
             <Footer />
         </>
     );
 }
+
+const styles = {
+    balanceBox: {
+        position: 'absolute',
+        top: '20px',
+        right: '20px',
+        backgroundColor: '#FFC107', // Dark yellow background
+        color: '#fff', // White text
+        padding: '10px 20px',
+        borderRadius: '5px',
+        boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+    },
+    balanceText: {
+        margin: 0,
+        fontSize: '1.2rem',
+        fontWeight: 'bold',
+    },
+};
