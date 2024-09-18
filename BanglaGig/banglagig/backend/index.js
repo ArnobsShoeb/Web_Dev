@@ -35,6 +35,7 @@ const startServer = async () => {
     app.use('/api', require('./Routes/SubmitPayment'));
     app.use('/api', require('./Routes/FetchMyGigs'));
     app.use('/api', require('./Routes/PlaceOrder'));
+    app.use('/api', require('./Routes/FetchActiveOrders'));
 
     // Root route
     app.get('/', (req, res) => {
