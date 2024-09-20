@@ -58,6 +58,13 @@ export default function Navbar() {
                 </Link>
               </li>
             )}
+            {isLoggedIn && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/proposals">
+                  Proposals
+                </Link>
+              </li> 
+            )}
             {isLoggedIn && userType === 'Buyer' && (
               <li className="nav-item">
                 <Link className="nav-link" to="/my-orders">
