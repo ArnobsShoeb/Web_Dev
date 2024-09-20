@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import Carousel from '../components/Carousel';
 import { Link, useNavigate } from 'react-router-dom';
 import { Modal, Button, Form } from 'react-bootstrap';
+import HomeBackground from '../images/HomeBackground.jpg'; // Import the background image
 
 export default function Home() {
   const [gigs, setGigs] = useState([]);
@@ -17,6 +18,7 @@ export default function Home() {
   const [orderDeadline, setOrderDeadline] = useState('');
   const [orderStatus, setOrderStatus] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false); // New state for success modal
+  const [hoveredCardId, setHoveredCardId] = useState(null); // State for hover effect
   const navigate = useNavigate();
   const usertype = localStorage.getItem('usertype');
   const buyerEmail = localStorage.getItem('email'); // Retrieve buyer's email from localStorage
@@ -109,6 +111,38 @@ export default function Home() {
   };
 
   const styles = {
+    container: {
+      position: 'relative',
+      margin: 0, // Remove default margin
+      padding: 0, // Remove default padding
+      backgroundImage: `url(${HomeBackground})`, // Set the background image
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      overflow: 'hidden',
+    },
+    overlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent overlay
+      zIndex: 1,
+    },
+    content: {
+      position: 'relative',
+      zIndex: 2,
+      margin: 0, // Remove default margin
+      padding: 0, // Remove default padding
+    },
+    card: {
+      transition: 'transform 0.3s ease',
+      cursor: 'pointer',
+    },
+    cardHovered: {
+      transform: 'scale(1.10)', // Increase the scale of the card on hover
+    },
     cardImg: {
       width: '100%',
       height: '200px',
@@ -123,85 +157,123 @@ export default function Home() {
     paginationControls: {
       marginTop: '1rem',
       textAlign: 'center',
+      
     },
-    container: {
-      marginTop: '1rem',
+    buttonGroup: {
+      display: 'flex',
+      justifyContent: 'center',
+      gap: '1rem',
+      
+    },
+    btnPrimary: {
+      backgroundColor: '#007bff',
+      borderColor: '#007bff',
+      color: '#fff',
+      borderRadius: '5px',
+      padding: '10px 20px',
+      fontSize: '1.25rem',
+      textDecoration: 'none',
+    },
+    btnSecondary: {
+      backgroundColor: "Green",
+      borderColor: '#6c757d',
+      color: '#fff',
+      borderRadius: '5px',
+      padding: '10px 20px',
+      fontSize: '1.25rem',
+      textDecoration: 'none',
     },
   };
 
   return (
-    <div>
-      <Navbar />
-      <Carousel onSearch={handleSearch} />
+    <div style={styles.container}>
+      <div style={styles.overlay}></div> {/* Semi-transparent overlay */}
+      <div style={styles.content}>
+        <Navbar />
+        <Carousel onSearch={handleSearch} />
 
-      <div>
-        {/* Conditional Button */}
-        {usertype === "Seller" && (
-          <div className="text-center mt-4">
-            <Link className="btn btn-primary btn-lg" to="/postgig">
-              Post Your Gig
-            </Link>
-            <Link className="btn btn-secondary btn-lg ml-3" to="/myorders">
-              My Orders
-            </Link>
-          </div>
-        )}
-        {usertype === "Buyer" && (
-          <div className="text-center mt-4">
-            <Link className="btn btn-primary btn-lg" to="/payment">
-              Go to Payment
-            </Link>
-          </div>
-        )}
-      </div>
+        <div className="mt-4">
+          {/* Conditional Button */}
+          {usertype === "Seller" && (
+            <div className="text-center" style={styles.buttonGroup}>
+              <Link className="btn btn-primary" to="/postgig" style={styles.btnPrimary}>
+                Post Your Gig
+              </Link>
+              <Link className="btn btn-secondary" to="/myorders" style={styles.btnSecondary}>
+                My Orders
+              </Link>
+            </div>
+          )}
+          {usertype === "Buyer" && (
+            <div className="text-center mt-4">
+              <Link className="btn btn-primary" to="/payment" style={styles.btnPrimary}>
+                Go to Payment
+              </Link>
+            </div>
+          )}
+        </div>
 
-      <div id="top-gigs" className="container mt-5">
-        <h3 className="text-center mb-4">Top Gigs</h3>
-        {message && <div className="alert alert-info">{message}</div>}
-        <div className="row">
-          {filteredGigs.map((gig) => (
-            <div className="col-md-4 mb-4" key={gig._id}>
-              <div className="card" onClick={() => openModal(gig)} style={{ cursor: 'pointer' }}>
-                <img src={gig.imageUrl} alt={gig.title} style={styles.cardImg} />
-                <div className="card-body">
-                  <h5 className="card-title">{gig.title}</h5>
-                  <p className="card-text">
-                    <strong>Price: </strong>BDT {gig.price}
-                  </p>
+        <div id="top-gigs" className="container mt-5">
+          <h3 className="text-center mb-4">Top Gigs</h3>
+          {message && <div className="alert alert-info">{message}</div>}
+          <div className="row">
+            {filteredGigs.map((gig) => (
+              <div
+                className="col-md-4 mb-4"
+                key={gig._id}
+                onMouseEnter={() => setHoveredCardId(gig._id)}
+                onMouseLeave={() => setHoveredCardId(null)}
+              >
+                <div
+                  className="card"
+                  style={{
+                    ...styles.card,
+                    ...(hoveredCardId === gig._id ? styles.cardHovered : {}),
+                  }}
+                  onClick={() => openModal(gig)}
+                >
+                  <img src={gig.imageUrl} alt={gig.title} style={styles.cardImg} />
+                  <div className="card-body">
+                    <h5 className="card-title">{gig.title}</h5>
+                    <p className="card-text">
+                      <strong>Price: </strong>BDT {gig.price}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <div className="pagination-controls mt-4  text-center" style={styles.paginationControls}>
+            <button 
+              className="btn btn-secondary bg-dark"
+              onClick={goToPreviousPage}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span className="mx-2 text-white">Page {currentPage} of {totalPages}</span>
+            <button
+              className="btn btn-secondary bg-dark"
+              onClick={goToNextPage}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
         </div>
 
-        <div className="pagination-controls mt-4 text-center" style={styles.paginationControls}>
-          <button
-            className="btn btn-secondary"
-            onClick={goToPreviousPage}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          <span className="mx-2">Page {currentPage} of {totalPages}</span>
-          <button
-            className="btn btn-secondary"
-            onClick={goToNextPage}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
-        </div>
+        <Footer />
       </div>
 
-      <Footer />
-
+      {/* Order Modal */}
       {selectedGig && (
         <Modal show={showModal} onHide={closeModal}>
           <Modal.Header closeButton>
-            <Modal.Title>{selectedGig.title}</Modal.Title>
+            <Modal.Title>Order Gig</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <img src={selectedGig.imageUrl} alt={selectedGig.title} style={styles.imgFluid} />
+            <h4>{selectedGig.title}</h4>
             <p><strong>Price:</strong> BDT {selectedGig.price}</p>
             <p><strong>Description:</strong> {selectedGig.description}</p>
             <p><strong>Seller:</strong> {selectedGig.email}</p>
@@ -226,6 +298,7 @@ export default function Home() {
         </Modal>
       )}
 
+      {/* Success Modal */}
       <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Success</Modal.Title>

@@ -3,6 +3,9 @@ import carouselImage1 from '../images/carousel1.jpg';
 import carouselImage2 from '../images/carousel2.jpg';
 import carouselImage3 from '../images/carousel3.jpg';
 
+// Import the handwritten font from Google Fonts
+import '@fontsource/kaushan-script'; // Example: Kaushan Script
+
 export default function Carousel({ onSearch }) {
   const handleSearchChange = (e) => {
     onSearch(e.target.value);
@@ -22,7 +25,7 @@ export default function Carousel({ onSearch }) {
         <form style={{ display: 'flex', justifyContent: 'center' }}>
           <input
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              backgroundColor: 'rgba(255, 255, 255, 0.4)',
               border: 'none',
               color: '#fff',
               padding: '10px',
@@ -106,6 +109,26 @@ export default function Carousel({ onSearch }) {
           <span className="carousel-control-next-icon" aria-hidden="true"></span>
           <span className="visually-hidden">Next</span>
         </a>
+      </div>
+
+      {/* Overlay Text */}
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        textAlign: 'center',
+        zIndex: '5',
+        color: '#fff',
+        fontFamily: "'Kaushan Script', cursive", // Use the handwritten font
+        fontSize: '4rem',
+        fontWeight: 'bold',
+        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)', // Add shadow for better readability
+        backgroundColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent background
+        padding: '20px',
+        borderRadius: '10px'
+      }}>
+        Best Freelancing App in Bangladesh
       </div>
     </div>
   );

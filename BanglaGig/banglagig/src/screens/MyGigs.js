@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import backgroundImage from '../images/MyGigBackground.jpg';
 
 export default function MyGigs() {
   const [gigs, setGigs] = useState([]);
@@ -43,7 +44,7 @@ export default function MyGigs() {
   };
 
   return (
-    <div style={styles.container}>
+    <div style={{ ...styles.container, backgroundImage: `url(${backgroundImage})` }}>
       <h1 style={styles.heading}>My Gigs</h1>
       {loading && <p style={styles.loading}>Loading...</p>}
       {error && <p style={styles.error}>{error}</p>}
@@ -77,11 +78,13 @@ const styles = {
     padding: '30px',
     backgroundColor: '#f4f7f6',
     minHeight: '100vh',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
   },
   heading: {
     marginBottom: '20px',
     fontSize: '2rem',
-    color: '#333',
+    color: '#000',
     textAlign: 'center',
     fontWeight: '700',
   },
@@ -106,7 +109,7 @@ const styles = {
     alignItems: 'center',
   },
   listGroupItem: {
-    backgroundColor: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: '8px',
     boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
     margin: '10px 0',
@@ -119,12 +122,12 @@ const styles = {
   title: {
     fontSize: '1.6rem',
     fontWeight: '600',
-    color: '#333',
+    color: '#000',
     marginBottom: '10px',
   },
   description: {
     fontSize: '1rem',
-    color: '#555',
+    color: '#111',
     marginBottom: '15px',
   },
   price: {

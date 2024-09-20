@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <div>
-      <footer className="text-center text-lg-start bg-body-tertiary text-muted">
+      <footer className="text-center text-lg-start mt-5 bg-body-tertiary text-muted">
         <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
           <div className="me-5 d-none d-lg-block">
             <span>Get connected with us on social networks:</span>
@@ -45,10 +45,15 @@ export default function Footer() {
               </div>
 
               <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                <h6 className="text-uppercase fw-bold mb-4">Products</h6>
+                <h6 className="text-uppercase fw-bold mb-4">Tech Stack</h6>
                 <p>
                   <Link href="#!" className="text-reset">
-                    Angular
+                    MongoDB
+                  </Link>
+                </p>
+                <p>
+                  <Link href="#!" className="text-reset">
+                    Express
                   </Link>
                 </p>
                 <p>
@@ -58,12 +63,7 @@ export default function Footer() {
                 </p>
                 <p>
                   <Link href="#!" className="text-reset">
-                    Vue
-                  </Link>
-                </p>
-                <p>
-                  <Link href="#!" className="text-reset">
-                    Laravel
+                    NodeJs
                   </Link>
                 </p>
               </div>
@@ -113,9 +113,9 @@ export default function Footer() {
         </section>
 
         <div className="text-center p-4">
-          © 2021 Copyright:
-          <Link className="text-reset fw-bold" href="https://mdbootstrap.com/">
-            MDBootstrap.com
+          © 2021 Copyright:  
+          <Link className="text-reset fw-bold" href="https://www.facebook.com/profile.php?id=100023571249041">
+            &nbsp; Arnob Shoeb
           </Link>
         </div>
       </footer>
