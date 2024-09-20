@@ -3,32 +3,39 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Carousel from '../components/Carousel';
 import { Link, useNavigate } from 'react-router-dom';
-import { Modal, Button } from 'react-bootstrap'; // Import Modal and Button from react-bootstrap
+import { Modal, Button, Form } from 'react-bootstrap';
+import HomeBackground from '../images/HomeBackground.jpg'; // Import the background image
 
 export default function Home() {
   const [gigs, setGigs] = useState([]);
+  const [filteredGigs, setFilteredGigs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [message, setMessage] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);  // Track the current page
-  const [totalPages, setTotalPages] = useState(1);    // Total number of pages
-  const [showModal, setShowModal] = useState(false);  // Modal state
-  const [selectedGig, setSelectedGig] = useState(null); // Selected gig for modal
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedGig, setSelectedGig] = useState(null);
+  const [orderDeadline, setOrderDeadline] = useState('');
+  const [orderStatus, setOrderStatus] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // New state for success modal
+  const [hoveredCardId, setHoveredCardId] = useState(null); // State for hover effect
   const navigate = useNavigate();
   const usertype = localStorage.getItem('usertype');
+  const buyerEmail = localStorage.getItem('email'); // Retrieve buyer's email from localStorage
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
       navigate('/');
     }
 
-    // Fetch gigs from the backend
     const fetchGigs = async (page = 1, query = '') => {
       try {
         const response = await fetch(`http://localhost:4000/api/getgigs?page=${page}&search=${query}`);
         if (response.ok) {
           const data = await response.json();
           setGigs(data.gigs);
-          setTotalPages(data.totalPages); // Set the total pages from the response
+          setFilteredGigs(data.gigs);
+          setTotalPages(data.totalPages);
         } else {
           setMessage('Failed to load gigs. Please try again.');
         }
@@ -38,136 +45,247 @@ export default function Home() {
       }
     };
 
-    fetchGigs(currentPage, searchTerm); // Fetch gigs initially or when page/searchTerm changes
+    fetchGigs(currentPage, searchTerm);
   }, [currentPage, searchTerm, navigate]);
 
-  // Handle search input change
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to first page when search term changes
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    setFilteredGigs(gigs.filter(gig => gig.title.toLowerCase().includes(term.toLowerCase())));
+    setCurrentPage(1);
   };
 
-  // Open modal for selected gig
   const openModal = (gig) => {
     setSelectedGig(gig);
     setShowModal(true);
   };
 
-  // Close modal
   const closeModal = () => {
     setShowModal(false);
     setSelectedGig(null);
+    setOrderDeadline('');
+    setOrderStatus('');
   };
 
-  // Handle order button click
-  const handleOrder = () => {
-    if (selectedGig) {
-      // Redirect to order page or handle order logic
-      console.log('Order placed for:', selectedGig.title);
-      closeModal();
+  const handleOrder = async () => {
+    if (selectedGig && usertype === 'Buyer') {
+      try {
+        const response = await fetch('http://localhost:4000/api/placeorder', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Buyer-Email': buyerEmail, // Pass the buyer's email in headers
+          },
+          body: JSON.stringify({
+            buyerEmail,
+            sellerEmail: selectedGig.email, // Use sellerEmail from gig
+            orderDeadline,
+            gigId: selectedGig._id,
+          }),
+        });
+        if (response.ok) {
+          setOrderStatus('Order placed successfully');
+          closeModal();
+          setShowSuccessModal(true); // Show success modal
+        } else {
+          setOrderStatus('Error placing order');
+        }
+      } catch (error) {
+        console.error('Error placing order:', error);
+        setOrderStatus('Error placing order');
+      }
+    } else {
+      setOrderStatus('Only buyers can place orders');
     }
   };
 
-  // Go to the next page
   const goToNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
 
-  // Go to the previous page
   const goToPreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
+  const styles = {
+    container: {
+      position: 'relative',
+      margin: 0, // Remove default margin
+      padding: 0, // Remove default padding
+      backgroundImage: `url(${HomeBackground})`, // Set the background image
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      overflow: 'hidden',
+    },
+    overlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent overlay
+      zIndex: 1,
+    },
+    content: {
+      position: 'relative',
+      zIndex: 2,
+      margin: 0, // Remove default margin
+      padding: 0, // Remove default padding
+    },
+    card: {
+      transition: 'transform 0.3s ease',
+      cursor: 'pointer',
+    },
+    cardHovered: {
+      transform: 'scale(1.10)', // Increase the scale of the card on hover
+    },
+    cardImg: {
+      width: '100%',
+      height: '200px',
+      objectFit: 'cover',
+    },
+    imgFluid: {
+      width: '100%',
+      height: 'auto',
+      maxHeight: '400px',
+      objectFit: 'cover',
+    },
+    paginationControls: {
+      marginTop: '1rem',
+      textAlign: 'center',
+      
+    },
+    buttonGroup: {
+      display: 'flex',
+      justifyContent: 'center',
+      gap: '1rem',
+      
+    },
+    btnPrimary: {
+      backgroundColor: '#007bff',
+      borderColor: '#007bff',
+      color: '#fff',
+      borderRadius: '5px',
+      padding: '10px 20px',
+      fontSize: '1.25rem',
+      textDecoration: 'none',
+    },
+    btnSecondary: {
+      backgroundColor: "Green",
+      borderColor: '#6c757d',
+      color: '#fff',
+      borderRadius: '5px',
+      padding: '10px 20px',
+      fontSize: '1.25rem',
+      textDecoration: 'none',
+    },
+  };
+
   return (
-    <div>
-      <Navbar />
-      <Carousel />
+    <div style={styles.container}>
+      <div style={styles.overlay}></div> {/* Semi-transparent overlay */}
+      <div style={styles.content}>
+        <Navbar />
+        <Carousel onSearch={handleSearch} />
 
-      {/* Search bar */}
-      <div className="container mt-4">
-        <div className="input-group mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search gigs..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
+        <div className="mt-4">
+          {/* Conditional Button */}
+          {usertype === "Seller" && (
+            <div className="text-center" style={styles.buttonGroup}>
+              <Link className="btn btn-primary" to="/postgig" style={styles.btnPrimary}>
+                Post Your Gig
+              </Link>
+              <Link className="btn btn-secondary" to="/myorders" style={styles.btnSecondary}>
+                My Orders
+              </Link>
+            </div>
+          )}
+          {usertype === "Buyer" && (
+            <div className="text-center mt-4">
+              <Link className="btn btn-primary" to="/payment" style={styles.btnPrimary}>
+                Go to Payment
+              </Link>
+            </div>
+          )}
         </div>
-      </div>
-      <div>
-        {/* Conditional Button */}
-        {usertype === "Seller" && (
-          <div className="text-center mt-4">
-            <Link className="btn btn-primary btn-lg" to="http://localhost:3000/postgig">
-              Post Your Gig
-            </Link>
-          </div>
-        )}
-        {usertype === "Buyer" && (
-          <div className="text-center mt-4">
-            <Link className="btn btn-primary btn-lg" to="http://localhost:3000/payment">
-              Go to Payment
-            </Link>
-          </div>
-        )}
-      </div>
 
-      {/* Display gigs */}
-      <div className="container mt-5">
-        <h3 className="text-center mb-4">Top Gigs</h3>
-        {message && <div className="alert alert-info">{message}</div>}
-        <div className="row">
-          {gigs.map((gig) => (
-            <div className="col-md-4 mb-4" key={gig._id}>
-              <div className="card" onClick={() => openModal(gig)} style={{ cursor: 'pointer' }}>
-                <div className="card-body">
-                  <h5 className="card-title">{gig.title}</h5>
-                  <p className="card-text">
-                    <strong>Price: </strong>BDT {gig.price}
-                  </p>
+        <div id="top-gigs" className="container mt-5">
+          <h3 className="text-center mb-4">Top Gigs</h3>
+          {message && <div className="alert alert-info">{message}</div>}
+          <div className="row">
+            {filteredGigs.map((gig) => (
+              <div
+                className="col-md-4 mb-4"
+                key={gig._id}
+                onMouseEnter={() => setHoveredCardId(gig._id)}
+                onMouseLeave={() => setHoveredCardId(null)}
+              >
+                <div
+                  className="card"
+                  style={{
+                    ...styles.card,
+                    ...(hoveredCardId === gig._id ? styles.cardHovered : {}),
+                  }}
+                  onClick={() => openModal(gig)}
+                >
+                  <img src={gig.imageUrl} alt={gig.title} style={styles.cardImg} />
+                  <div className="card-body">
+                    <h5 className="card-title">{gig.title}</h5>
+                    <p className="card-text">
+                      <strong>Price: </strong>BDT {gig.price}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <div className="pagination-controls mt-4  text-center" style={styles.paginationControls}>
+            <button 
+              className="btn btn-secondary bg-dark"
+              onClick={goToPreviousPage}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+            <span className="mx-2 text-white">Page {currentPage} of {totalPages}</span>
+            <button
+              className="btn btn-secondary bg-dark"
+              onClick={goToNextPage}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
         </div>
 
-        {/* Pagination Controls */}
-        <div className="pagination-controls mt-4 text-center">
-          <button
-            className="btn btn-secondary"
-            onClick={goToPreviousPage}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          <span className="mx-2">Page {currentPage} of {totalPages}</span>
-          <button
-            className="btn btn-secondary"
-            onClick={goToNextPage}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
-        </div>
+        <Footer />
       </div>
 
-      <Footer />
-
-      {/* Modal for Gig Details */}
+      {/* Order Modal */}
       {selectedGig && (
         <Modal show={showModal} onHide={closeModal}>
           <Modal.Header closeButton>
-            <Modal.Title>{selectedGig.title}</Modal.Title>
+            <Modal.Title>Order Gig</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            <h4>{selectedGig.title}</h4>
             <p><strong>Price:</strong> BDT {selectedGig.price}</p>
             <p><strong>Description:</strong> {selectedGig.description}</p>
-            <p><strong>Seller:</strong> {selectedGig.email}</p> {/* Ensure seller email is returned in the API */}
+            <p><strong>Seller:</strong> {selectedGig.email}</p>
+            <Form.Group controlId="orderDeadline">
+              <Form.Label>Order Deadline</Form.Label>
+              <Form.Control
+                type="date"
+                value={orderDeadline}
+                onChange={(e) => setOrderDeadline(e.target.value)}
+              />
+            </Form.Group>
+            {orderStatus && <div className="alert alert-info mt-2">{orderStatus}</div>}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={closeModal}>
@@ -179,6 +297,22 @@ export default function Home() {
           </Modal.Footer>
         </Modal>
       )}
+
+      {/* Success Modal */}
+      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Success</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h4>Congratulations!!</h4>
+          <p>Order Successful</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowSuccessModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

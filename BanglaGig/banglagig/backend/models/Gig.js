@@ -18,13 +18,16 @@ const gigSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  email: {   // Add email of the user who posted the gig
+  email: {
     type: String,
     required: true,
   },
-  orderCount: {      // Add order count for the gig
+  orderCount: {
     type: Number,
-    default: 0,      // Default value is 0 when a gig is first posted
+    default: 0,
+  },
+  imageUrl: {  // New field for storing image URL
+    type: String,
   }
 });
 

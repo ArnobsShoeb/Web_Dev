@@ -1,17 +1,34 @@
 const express = require('express');
 const router = express.Router();
 const Gig = require('../models/Gig');
+const multer = require('multer');
+const path = require('path');
 
-router.post('/postgig', async (req, res) => {
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+
+// Post gig route with file upload
+router.post('/postgig', upload.single('image'), async (req, res) => {
   const { title, description, price, email } = req.body;
+  const imageUrl = req.file ? req.file.path : null;  // Get file path if uploaded
 
   try {
     const newGig = new Gig({
       title,
       description,
       price,
-      email, // Save the email of the user posting the gig
-      orderCount: 0  // Set order count to 0 by default
+      email,
+      orderCount: 0,
+      imageUrl  // Save image URL
     });
 
     await newGig.save();

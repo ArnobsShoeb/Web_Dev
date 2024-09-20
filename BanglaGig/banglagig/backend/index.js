@@ -5,24 +5,19 @@ const app = express();
 const port = 4000;
 const mongoDB = require('./db');
 
+// Connect to MongoDB
 const startServer = async () => {
-    await mongoDB(); // Connect to MongoDB
+    await mongoDB();
 
-    // CORS middleware - Allow requests from localhost:3000
+    // CORS middleware
     app.use(cors({
-        origin: 'http://localhost:3000', // Allow only your frontend origin
-        methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these methods
-        credentials: true // Allow credentials if needed
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true
     }));
 
-    // Middleware to set CORS headers (if additional customization needed)
-    app.use((req, res, next) => {
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-        res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        next();
-    });
-
-    app.use(express.json()); // Middleware to parse JSON bodies
+    // Middleware to parse JSON bodies
+    app.use(express.json());
 
     // Serve static files from 'uploads' directory
     app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -38,8 +33,10 @@ const startServer = async () => {
     app.use('/api', require('./Routes/SetProPic'));
     app.use('/api', require('./Routes/TopUp'));
     app.use('/api', require('./Routes/SubmitPayment'));
-    
-
+    app.use('/api', require('./Routes/FetchMyGigs'));
+    app.use('/api', require('./Routes/PlaceOrder'));
+    app.use('/api', require('./Routes/FetchActiveOrders'));
+    app.use('/api', require('./Routes/DeleteGig'));
 
     // Root route
     app.get('/', (req, res) => {

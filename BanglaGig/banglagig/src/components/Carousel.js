@@ -1,43 +1,135 @@
-import React from 'react'
-import carouselImage1 from '../images/carousel1.jpg'  ;
-import carouselImage2 from '../images/carousel2.jpg'  ;
-import carouselImage3 from '../images/carousel3.jpg'  ;
+import React from 'react';
+import carouselImage1 from '../images/carousel1.jpg';
+import carouselImage2 from '../images/carousel2.jpg';
+import carouselImage3 from '../images/carousel3.jpg';
 
-export default function Carousel() {
+// Import the handwritten font from Google Fonts
+import '@fontsource/kaushan-script'; // Example: Kaushan Script
+
+export default function Carousel({ onSearch }) {
+  const handleSearchChange = (e) => {
+    onSearch(e.target.value);
+  };
+
   return (
-    <div>
-        <div id="carouselExampleIndicators" className="carousel slide courasel-fade" data-ride="carousel" style={{objectFit:'contain !important'}}>
+    <div style={{ position: 'relative' }}>
+      {/* Search Bar */}
+      <div style={{
+        position: 'absolute',
+        top: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: '10',
+        width: '60%'
+      }}>
+        <form style={{ display: 'flex', justifyContent: 'center' }}>
+          <input
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.4)',
+              border: 'none',
+              color: '#fff',
+              padding: '10px',
+              fontSize: '1.2rem',
+              width: '80%',
+              marginRight: '10px'
+            }}
+            type="search"
+            placeholder="Search Gigs"
+            aria-label="Search"
+            onChange={handleSearchChange}
+          />
+          <button
+            style={{
+              backgroundColor: 'transparent',
+              border: '2px solid #fff',
+              color: '#fff',
+              fontSize: '1.2rem',
+              padding: '10px',
+              cursor: 'pointer',
+              transition: 'background-color 0.3s ease'
+            }}
+            type="button"
+            onClick={() => document.getElementById('top-gigs').scrollIntoView({ behavior: 'smooth' })}
+          >
+            Search
+          </button>
+        </form>
+      </div>
+
+      {/* Carousel */}
+      <div id="carouselExampleIndicators" className="carousel slide carousel-fade" data-bs-ride="carousel">
         <ol className="carousel-indicators">
-    <li data-target="#carouselExampleIndicators" data-slide-to="0" className="active"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-  </ol>
-  <div className="carousel-inner" id='carousel1'>
-    <div className='carousel-caption' style={{zIndex:"10"}}>
-    <form className="d-flex">
-      <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-      <button className="btn btn-outline-success " type="submit">Search</button>
-    </form>
+          <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" className="active"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></li>
+        </ol>
+        <div className="carousel-inner" style={{ height: '80vh' }}>
+          <div className="carousel-item active">
+            <img
+              className="d-block w-100"
+              src={carouselImage1}
+              alt="First slide"
+              style={{
+                objectFit: 'cover',
+                height: '80vh',
+                filter: 'brightness(50%)'
+              }}
+            />
+          </div>
+          <div className="carousel-item">
+            <img
+              className="d-block w-100"
+              src={carouselImage2}
+              alt="Second slide"
+              style={{
+                objectFit: 'cover',
+                height: '80vh',
+                filter: 'brightness(50%)'
+              }}
+            />
+          </div>
+          <div className="carousel-item">
+            <img
+              className="d-block w-100"
+              src={carouselImage3}
+              alt="Third slide"
+              style={{
+                objectFit: 'cover',
+                height: '80vh',
+                filter: 'brightness(50%)'
+              }}
+            />
+          </div>
+        </div>
+        <a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-bs-slide="prev">
+          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Previous</span>
+        </a>
+        <a className="carousel-control-next" href="#carouselExampleIndicators" role="button" data-bs-slide="next">
+          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Next</span>
+        </a>
+      </div>
+
+      {/* Overlay Text */}
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        textAlign: 'center',
+        zIndex: '5',
+        color: '#fff',
+        fontFamily: "'Kaushan Script', cursive", // Use the handwritten font
+        fontSize: '4rem',
+        fontWeight: 'bold',
+        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)', // Add shadow for better readability
+        backgroundColor: 'rgba(0, 0, 0, 0.1)', // Semi-transparent background
+        padding: '20px',
+        borderRadius: '10px'
+      }}>
+        Best Freelancing App in Bangladesh
+      </div>
     </div>
-    <div className="carousel-item active">
-      <img className="d-block w-100" src={carouselImage1} style={{filter:"brightness(30%)"}} alt="First slide" />
-    </div>
-    <div className="carousel-item">
-      <img className="d-block w-100" src={carouselImage2} style={{filter:"brightness(30%)"}} alt="Second slide" />
-    </div>
-    <div className="carousel-item">
-      <img className="d-block w-100" src={carouselImage3} style={{filter:"brightness(30%)"}} alt="Third slide" />
-    </div>
-  </div>
-  <a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span className="sr-only"></span>
-  </a>
-  <a className="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-    <span className="carousel-control-next-icon" aria-hidden="true"></span>
-    <span className="sr-only"></span>
-  </a>
-</div>
-    </div>
-  )
+  );
 }

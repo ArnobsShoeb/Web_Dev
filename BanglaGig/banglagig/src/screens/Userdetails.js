@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fontsource/roboto'; // Import a font like Roboto from fontsource (or choose any font you prefer)
 import backgroundImg from '../images/background.jpg'; // Adjust the path to your image file
 
 export default function UserDetails() {
@@ -77,21 +78,22 @@ export default function UserDetails() {
                     backgroundImage: `url(${backgroundImg})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    minHeight: '100vh', // Cover the entire viewport height
+                    minHeight: '100vh',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    position: 'relative',
                 }}
             >
-                <div className="card" style={{ maxWidth: '600px', width: '90%', backgroundColor: 'rgba(255, 255, 255, 0.1)', position: 'relative' }}>
-                    <div className="card-body text-light" style={{ paddingTop: '5rem' }}>
+                <div className="card" style={{ maxWidth: '900px', width: '90%', backgroundColor: 'rgba(255, 255, 255, 0.2)', position: 'relative', transform: 'scale(1.5)' }}>
+                    <div className="card-body text-light" style={{ paddingTop: '7.5rem', backgroundColor: 'rgba(128, 128, 128, 0.4)' }}> {/* Gray background with 0.4 transparency */}
                         {profilePicture && (
-                            <div className="d-flex justify-content-center" style={{ position: 'absolute', top: '-3rem', width: '100%' }}>
+                            <div className="d-flex justify-content-center" style={{ position: 'absolute', top: '-4.5rem', width: '100%' }}>
                                 <img
                                     src={profilePicture}
                                     alt="Profile"
                                     className="rounded-circle"
-                                    style={{ width: '100px', height: '100px', objectFit: 'cover', border: '5px solid white' }}
+                                    style={{ width: '150px', height: '150px', objectFit: 'cover', border: '5px solid white' }}
                                 />
                             </div>
                         )}
@@ -113,11 +115,10 @@ export default function UserDetails() {
                         )}
                         {user ? (
                             <>
-                                <p className="display-6 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>User Name: {user.firstname} {user.lastname}</p>
-                                <p className="lead text-center">Email: {user.email}</p>
-                                <p className="text-center">User Type: {user.usertype}</p>
-                                <p className="text-center">User Balance: {user.balance}</p>
-                                <p className="text-center">Joined on: {new Date(user.date).toLocaleDateString()}</p>
+                                <p className="display-6 text-center colorful-name" style={styles.text}>User Name: {user.firstname} {user.lastname}</p>
+                                <p className="lead text-center" style={styles.text}>Email: {user.email}</p>
+                                <p className="text-center" style={styles.text}>User Type: {user.usertype}</p>
+                                <p className="text-center" style={styles.text}>Joined on: {new Date(user.date).toLocaleDateString()}</p>
                                 {user.usertype === 'buyer' && (
                                     <div className="text-center mt-3">
                                         <a href="/payment" className="btn btn-success">Go to Payment</a>
@@ -133,8 +134,34 @@ export default function UserDetails() {
                         )}
                     </div>
                 </div>
+                {user && (
+                    <div style={styles.balanceBox}>
+                        <p style={styles.balanceText}>Balance: ${user.balance}</p>
+                    </div>
+                )}
             </div>
             <Footer />
         </>
     );
 }
+
+const styles = {
+    balanceBox: {
+        position: 'absolute',
+        top: '20px',
+        right: '20px',
+        backgroundColor: '#FFC107', // Dark yellow background
+        color: '#fff', // White text
+        padding: '10px 20px',
+        borderRadius: '5px',
+        boxShadow: '0 4px 8px rgba(2,0,0,0.4)',
+    },
+    balanceText: {
+        margin: 0,
+        fontSize: '1.2rem',
+        fontWeight: 'bold',
+    },
+    text: {
+        fontFamily: 'Roboto, sans-serif', // Applying the Roboto font
+    }
+};
