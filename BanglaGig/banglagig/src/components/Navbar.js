@@ -9,13 +9,48 @@ export default function Navbar() {
 
   React.useEffect(() => {
     const token = localStorage.getItem('token');
-    const storedUsername = localStorage.getItem('firstname');
-    const storedUserType = localStorage.getItem('usertype');
+    const cachedFirstname = localStorage.getItem('firstname') || '';
+    const cachedUsertype = localStorage.getItem('usertype') || '';
+    const email = (localStorage.getItem('email') || '').trim();
 
-    if (token) {
-      setIsLoggedIn(true);
-      setUsername(storedUsername);
-      setUserType(storedUserType);
+    if (!token) {
+      setIsLoggedIn(false);
+      return;
+    }
+    setIsLoggedIn(true);
+
+    // If we have an email, fetch decrypted user data from the backend
+    if (email) {
+      (async () => {
+        try {
+          const res = await fetch(`http://localhost:4000/api/fetchuserdata?email=${encodeURIComponent(email)}`);
+          if (res.ok) {
+            const user = await res.json(); // expects { firstname, lastname, email, usertype, ... } decrypted
+            const first = user?.firstname || '';
+            const type  = user?.usertype || '';
+
+            setUsername(first);
+            setUserType(type);
+
+            // keep localStorage in sync for other pages
+            if (first) localStorage.setItem('firstname', first);
+            if (type)  localStorage.setItem('usertype', type);
+            if (user?.email) localStorage.setItem('email', user.email);
+          } else {
+            // fallback to whatever we have cached
+            setUsername(cachedFirstname);
+            setUserType(cachedUsertype);
+          }
+        } catch (e) {
+          console.error('Failed to fetch user data:', e);
+          setUsername(cachedFirstname);
+          setUserType(cachedUsertype);
+        }
+      })();
+    } else {
+      // No email in storage — fallback to cached name/usertype if present
+      setUsername(cachedFirstname);
+      setUserType(cachedUsertype);
     }
   }, []);
 
@@ -23,7 +58,10 @@ export default function Navbar() {
     localStorage.removeItem('token');
     localStorage.removeItem('usertype');
     localStorage.removeItem('firstname');
+    localStorage.removeItem('email');
     setIsLoggedIn(false);
+    setUsername('');
+    setUserType('');
     navigate('/login');
   };
 
@@ -44,6 +82,7 @@ export default function Navbar() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
+
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
@@ -51,6 +90,7 @@ export default function Navbar() {
                 Home
               </Link>
             </li>
+
             {isLoggedIn && userType === 'Seller' && (
               <li className="nav-item">
                 <Link className="nav-link" to="/mygigs">
@@ -58,13 +98,15 @@ export default function Navbar() {
                 </Link>
               </li>
             )}
+
             {isLoggedIn && (
               <li className="nav-item">
                 <Link className="nav-link" to="/proposals">
                   Proposals
                 </Link>
-              </li> 
+              </li>
             )}
+
             {isLoggedIn && userType === 'Buyer' && (
               <li className="nav-item">
                 <Link className="nav-link" to="/my-orders">
@@ -73,11 +115,12 @@ export default function Navbar() {
               </li>
             )}
           </ul>
+
           <div className="d-flex align-items-center">
             {isLoggedIn ? (
               <>
                 <Link className="nav-link text-white me-3" to="/userdetails">
-                  {username}
+                  {username || 'Profile'}
                 </Link>
                 <button className="btn btn-outline-light" onClick={handleLogout}>
                   Logout
