@@ -4,7 +4,7 @@ import Footer from '../components/Footer';
 import Carousel from '../components/Carousel';
 import { Link, useNavigate } from 'react-router-dom';
 import { Modal, Button, Form } from 'react-bootstrap';
-import HomeBackground from '../images/HomeBackground.jpg'; // Import the background image
+import HomeBackground from '../images/HomeBackground.jpg';
 
 export default function Home() {
   const [gigs, setGigs] = useState([]);
@@ -17,11 +17,11 @@ export default function Home() {
   const [selectedGig, setSelectedGig] = useState(null);
   const [orderDeadline, setOrderDeadline] = useState('');
   const [orderStatus, setOrderStatus] = useState('');
-  const [showSuccessModal, setShowSuccessModal] = useState(false); // New state for success modal
-  const [hoveredCardId, setHoveredCardId] = useState(null); // State for hover effect
+  const [showSuccessModal, setShowSuccessModal] = useState(false); 
+  const [hoveredCardId, setHoveredCardId] = useState(null); 
   const navigate = useNavigate();
   const usertype = localStorage.getItem('usertype');
-  const buyerEmail = localStorage.getItem('email'); // Retrieve buyer's email from localStorage
+  const buyerEmail = localStorage.getItem('email'); 
 
   useEffect(() => {
     if (!localStorage.getItem('token')) {
@@ -73,11 +73,11 @@ export default function Home() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Buyer-Email': buyerEmail, // Pass the buyer's email in headers
+            'Buyer-Email': buyerEmail, 
           },
           body: JSON.stringify({
             buyerEmail,
-            sellerEmail: selectedGig.email, // Use sellerEmail from gig
+            sellerEmail: selectedGig.email, 
             orderDeadline,
             gigId: selectedGig._id,
           }),
@@ -85,7 +85,7 @@ export default function Home() {
         if (response.ok) {
           setOrderStatus('Order placed successfully');
           closeModal();
-          setShowSuccessModal(true); // Show success modal
+          setShowSuccessModal(true); 
         } else {
           setOrderStatus('Error placing order');
         }
@@ -113,9 +113,9 @@ export default function Home() {
   const styles = {
     container: {
       position: 'relative',
-      margin: 0, // Remove default margin
-      padding: 0, // Remove default padding
-      backgroundImage: `url(${HomeBackground})`, // Set the background image
+      margin: 0, 
+      padding: 0, 
+      backgroundImage: `url(${HomeBackground})`, 
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       minHeight: '100vh',
@@ -127,21 +127,21 @@ export default function Home() {
       left: 0,
       width: '100%',
       height: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent overlay
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', 
       zIndex: 1,
     },
     content: {
       position: 'relative',
       zIndex: 2,
-      margin: 0, // Remove default margin
-      padding: 0, // Remove default padding
+      margin: 0, 
+      padding: 0, 
     },
     card: {
       transition: 'transform 0.3s ease',
       cursor: 'pointer',
     },
     cardHovered: {
-      transform: 'scale(1.10)', // Increase the scale of the card on hover
+      transform: 'scale(1.10)', 
     },
     cardImg: {
       width: '100%',
@@ -187,7 +187,7 @@ export default function Home() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.overlay}></div> {/* Semi-transparent overlay */}
+      <div style={styles.overlay}></div> 
       <div style={styles.content}>
         <Navbar />
         <Carousel onSearch={handleSearch} />

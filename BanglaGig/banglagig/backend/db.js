@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const mongoURI = 'mongodb://arnobshoeb:banglagig123@ac-ngevuoc-shard-00-00.krdl1rd.mongodb.net:27017,ac-ngevuoc-shard-00-01.krdl1rd.mongodb.net:27017,ac-ngevuoc-shard-00-02.krdl1rd.mongodb.net:27017/BanglaGig?ssl=true&replicaSet=atlas-zlgi90-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0';
+const mongoURI = 'mongodb+srv://arnobshoeb:banglagig123@cluster0.xke0xgd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
 const mongoDB = async () => {
   try {

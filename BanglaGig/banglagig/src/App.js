@@ -9,6 +9,7 @@ import MyGigs from './screens/MyGigs';
 import MyActiveOrder from './screens/MyActiveOrder';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/js/bootstrap.bundle.min'; // Use this instead of importing JS twice
+import PaymentHistory from './screens/PaymentHistory';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/postgig" element={<PostGig />} />
         <Route path="/mygigs" element={<MyGigs />} />
         <Route path="/myorders" element={<MyActiveOrder />} />
+        <Route path="/paymenthistory" element={<PaymentHistory />} />
       </Routes>
     </Router>
   );

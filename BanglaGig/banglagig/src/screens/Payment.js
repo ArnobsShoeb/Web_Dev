@@ -26,32 +26,30 @@ export default function Payment() {
 
     useEffect(() => {
         const email = localStorage.getItem('email');
-
         if (email) {
-            fetch(`http://localhost:4000/api/fetchuserdata?email=${email}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    setUser(data);
-                    if (data.profilePicture) {
-                        setProfilePicture(`http://localhost:4000/${data.profilePicture}`);
-                    }
-                })
-                .catch(error => {
-                    setMessage({ type: 'error', content: 'Error fetching user data' });
-                });
+            fetchUserData(email);
         } else {
-            setMessage({ type: 'error', content: 'No email found' });
+            setMessage({ type: 'error', content: 'No email found in local storage' });
         }
     }, []);
 
+    const fetchUserData = async (email) => {
+        try {
+            const response = await fetch(`http://localhost:4000/api/fetchuserdata?email=${email}`);
+            const data = await response.json();
+            if (response.ok) {
+                setUser(data);
+                setProfilePicture(data.profilePicture ? `http://localhost:4000/${data.profilePicture}` : null);
+            } else {
+                setMessage({ type: 'error', content: 'Error fetching user data' });
+            }
+        } catch (error) {
+            setMessage({ type: 'error', content: 'Error fetching user data' });
+        }
+    };
+
     const handlePayment = async (e) => {
         e.preventDefault();
-
         if (amount <= 0) {
             setMessage({ type: 'error', content: 'Invalid amount. Please enter a positive value.' });
             return;
@@ -78,6 +76,12 @@ export default function Payment() {
             const data = await response.json();
             if (response.ok) {
                 setMessage({ type: 'success', content: 'Payment successful!' });
+                // Optionally reset form fields
+                setRecipientEmail('');
+                setAmount('');
+                setPhoneNumber('');
+                setAccountNumber('');
+                setBank('');
             } else {
                 setMessage({ type: 'error', content: data.message });
             }
@@ -88,7 +92,6 @@ export default function Payment() {
 
     const handleTopUp = async (e) => {
         e.preventDefault();
-
         if (topUpAmount <= 0) {
             setMessage({ type: 'error', content: 'Invalid top-up amount. Please enter a positive value.' });
             return;
@@ -102,11 +105,11 @@ export default function Payment() {
                 },
                 body: JSON.stringify({ email: user.email, amount: topUpAmount }),
             });
-
             const data = await response.json();
             if (response.ok) {
                 setUser((prev) => ({ ...prev, balance: data.balance }));
                 setMessage({ type: 'success', content: 'Top-up successful!' });
+                setTopUpAmount(''); // Clear top-up input field
             } else {
                 setMessage({ type: 'error', content: data.message });
             }
@@ -216,7 +219,6 @@ export default function Payment() {
                                     />
                                 </div>
 
-                                {/* Send via Option */}
                                 <div className="mb-3">
                                     <label htmlFor="paymentMethod" className="form-label">Send via</label>
                                     <select
@@ -224,53 +226,48 @@ export default function Payment() {
                                         id="paymentMethod"
                                         value={paymentMethod}
                                         onChange={(e) => setPaymentMethod(e.target.value)}
-                                        required
                                         style={{ borderRadius: '10px', padding: '10px' }}
                                     >
                                         <option value="bKash">bKash</option>
-                                        <option value="Nagad">Nagad</option>
                                         <option value="Rocket">Rocket</option>
                                         <option value="Bank Transfer">Bank Transfer</option>
                                     </select>
                                 </div>
 
-                                {/* Conditional fields for Bank Transfer */}
                                 {paymentMethod === 'Bank Transfer' && (
-                                    <>
-                                        <div className="mb-3">
-                                            <label htmlFor="bank" className="form-label">Bank</label>
-                                            <select
-                                                className="form-control"
-                                                id="bank"
-                                                value={bank}
-                                                onChange={(e) => setBank(e.target.value)}
-                                                required
-                                                style={{ borderRadius: '10px', padding: '10px' }}
-                                            >
-                                                <option value="">Select Bank</option>
-                                                {bankOptions.map((option) => (
-                                                    <option key={option} value={option}>{option}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="mb-3">
-                                            <label htmlFor="accountNumber" className="form-label">Account Number</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="accountNumber"
-                                                placeholder="Enter account number"
-                                                value={accountNumber}
-                                                onChange={(e) => setAccountNumber(e.target.value)}
-                                                required
-                                                style={{ borderRadius: '10px', padding: '10px' }}
-                                            />
-                                        </div>
-                                    </>
+                                    <div className="mb-3">
+                                        <label htmlFor="bank" className="form-label">Bank Name</label>
+                                        <select
+                                            className="form-control"
+                                            id="bank"
+                                            value={bank}
+                                            onChange={(e) => setBank(e.target.value)}
+                                            required
+                                            style={{ borderRadius: '10px', padding: '10px' }}
+                                        >
+                                            <option value="">Select Bank</option>
+                                            {bankOptions.map((bankName) => (
+                                                <option key={bankName} value={bankName}>{bankName}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 )}
 
-                                {/* Conditional fields for Mobile Payments */}
-                                {paymentMethod !== 'Bank Transfer' && (
+                                {paymentMethod === 'Bank Transfer' ? (
+                                    <div className="mb-3">
+                                        <label htmlFor="accountNumber" className="form-label">Account Number</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="accountNumber"
+                                            placeholder="Enter account number"
+                                            value={accountNumber}
+                                            onChange={(e) => setAccountNumber(e.target.value)}
+                                            required
+                                            style={{ borderRadius: '10px', padding: '10px' }}
+                                        />
+                                    </div>
+                                ) : (
                                     <div className="mb-3">
                                         <label htmlFor="phoneNumber" className="form-label">Phone Number</label>
                                         <input

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Gig = require('../models/Gig'); // Adjust the path to your Gig model
+const Gig = require('../models/Gig'); 
 
 // Route to fetch gigs based on the user's email
 router.get('/mygigs', async (req, res) => {
