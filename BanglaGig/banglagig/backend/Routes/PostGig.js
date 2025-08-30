@@ -1,41 +1,49 @@
+// routes/PostGig.js
 const express = require('express');
 const router = express.Router();
 const Gig = require('../models/Gig');
 const multer = require('multer');
 const path = require('path');
+const { encryptText, sha256Hex } = require('../utils/CryptoService');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+  destination: (_req, _file, cb) => cb(null, 'uploads/'),
+  filename: (_req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
 });
-
 const upload = multer({ storage });
 
-// Post gig route with file upload
+// POST /api/postgig
 router.post('/postgig', upload.single('image'), async (req, res) => {
-  const { title, description, price, email } = req.body;
-  const imageUrl = req.file ? req.file.path : null;  // Get file path if uploaded
-
   try {
+    const { title, description, price, email } = req.body;
+    const imageUrl = req.file ? req.file.path : null;
+
+    // normalize email for hashing
+    const normalizedEmail = (email || '').toLowerCase().trim();
+    const emailHash = sha256Hex(normalizedEmail);
+
+    // encrypt fields (hybrid)
+    const encTitle = encryptText(title);
+    const encDesc  = encryptText(description);
+    const encPrice = encryptText(String(price));
+    const encEmail = encryptText(normalizedEmail);
+
     const newGig = new Gig({
-      title,
-      description,
-      price,
-      email,
+      title: encTitle,
+      description: encDesc,
+      price: encPrice,
+      email: encEmail,
+      emailHash,
       orderCount: 0,
-      imageUrl  // Save image URL
+      imageUrl,
     });
 
     await newGig.save();
-    res.status(201).json({ message: 'Gig posted successfully!' });
+    return res.status(201).json({ message: 'Gig posted successfully!' });
   } catch (error) {
     console.error('Error posting gig:', error);
-    res.status(500).json({ message: 'Failed to post gig' });
+    return res.status(500).json({ message: 'Failed to post gig' });
   }
 });
 

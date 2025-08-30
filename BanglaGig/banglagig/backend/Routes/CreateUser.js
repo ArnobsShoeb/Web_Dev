@@ -3,8 +3,6 @@ const router = express.Router();
 const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
-
-// ✅ Correct import – matches utils/CryptoService.js
 const { encrypt, sha256Hex } = require("../utils/CryptoService");
 
 router.post(

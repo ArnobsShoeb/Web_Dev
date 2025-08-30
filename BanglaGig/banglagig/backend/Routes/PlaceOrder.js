@@ -1,35 +1,62 @@
+// routes/PlaceOrder.js
 const express = require('express');
 const router = express.Router();
-const Order = require('../models/Orders'); // Import the Order model
-const Gig = require('../models/Gig'); // Import the Gig model
+const Order = require('../models/Orders');
+const Gig = require('../models/Gig');
+const { encryptText, decryptText, sha256Hex } = require('../utils/CryptoService');
 
-// Route to place an order
+// POST /api/placeorder
 router.post('/placeorder', async (req, res) => {
   const { orderDeadline, gigId } = req.body;
 
-  // Retrieve the buyer's email from a header (sent from the frontend)
-  const buyerEmail = req.headers['buyer-email'];
+  // buyer email comes from header or body (fallback)
+  const buyerEmailHeader = req.headers['buyer-email'];
+  const buyerEmailBody = req.body.buyerEmail;
+  const buyerEmailRaw = (buyerEmailHeader || buyerEmailBody || '').trim().toLowerCase();
+
+  if (!buyerEmailRaw) {
+    return res.status(400).json({ message: 'Buyer email is required' });
+  }
+  if (!orderDeadline || !gigId) {
+    return res.status(400).json({ message: 'orderDeadline and gigId are required' });
+  }
 
   try {
-    // Check if the gig exists
-    const gig = await Gig.findById(gigId);
-    if (!gig) {
-      return res.status(404).json({ message: 'Gig not found' });
+    const gig = await Gig.findById(gigId).lean();
+    if (!gig) return res.status(404).json({ message: 'Gig not found' });
+
+    // Decrypt seller email from the gig
+    const sellerEmailPlain = (decryptText(gig.email) || '').trim().toLowerCase();
+    if (!sellerEmailPlain) {
+      return res.status(500).json({ message: 'Seller email missing on gig' });
     }
 
-    // Create a new order
+    // Normalize & hash for lookups
+    const buyerEmailHash  = sha256Hex(buyerEmailRaw);
+    const sellerEmailHash = sha256Hex(sellerEmailPlain);
+
+    // Encrypt order fields (store as strings)
+    const nowIso = new Date().toISOString();
+    const encBuyerEmail   = encryptText(buyerEmailRaw);
+    const encSellerEmail  = encryptText(sellerEmailPlain);
+    const encOrderedDate  = encryptText(nowIso);
+    const encOrderDeadline= encryptText(new Date(orderDeadline).toISOString());
+
     const order = new Order({
-      buyerEmail,
-      sellerEmail: gig.email, // Use the seller's email from the gig
-      orderDeadline,
+      buyerEmail: encBuyerEmail,
+      sellerEmail: encSellerEmail,
+      orderedDate: encOrderedDate,
+      orderDeadline: encOrderDeadline,
+      buyerEmailHash,
+      sellerEmailHash,
       gigInfo: gigId
     });
 
     await order.save();
-    res.status(201).json({ message: 'Order placed successfully' });
+    return res.status(201).json({ message: 'Order placed successfully' });
   } catch (error) {
     console.error('Error placing order:', error);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 });
 

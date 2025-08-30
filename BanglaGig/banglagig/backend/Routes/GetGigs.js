@@ -1,40 +1,42 @@
+// routes/GetGigs.js
 const express = require('express');
 const router = express.Router();
 const Gig = require('../models/Gig');
+const { decryptText } = require('../utils/CryptoService');
 
-// Route to get gigs with pagination
+// GET /api/getgigs?page=1&limit=9&search=term   (search handled client-side)
 router.get('/getgigs', async (req, res) => {
   try {
-    const { page = 1, limit = 9, search = '' } = req.query;
+    const page  = parseInt(req.query.page || '1', 10);
+    const limit = parseInt(req.query.limit || '9', 10);
 
-    // Search for gigs based on the search term
-    const query = search
-      ? { title: { $regex: search, $options: 'i' } }
-      : {};
+    const gigs = await Gig.find({})
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .lean();
 
-    // Fetch gigs with pagination
-    const gigs = await Gig.find(query)
-      .limit(limit * 1) // Limit the number of gigs
-      .skip((page - 1) * limit) // Skip gigs for previous pages
-      .exec();
+    const count = await Gig.countDocuments({});
 
-    // Get total documents for the pagination calculation
-    const count = await Gig.countDocuments(query);
-
-    // Map over the gigs to include the full image URL
-    const gigsWithImageUrl = gigs.map(gig => ({
-      ...gig.toObject(),
-      imageUrl: `http://localhost:4000/${gig.imageUrl}` // Construct the full URL for the image
+    const gigsOut = gigs.map(g => ({
+      _id: g._id,
+      title: decryptText(g.title),
+      description: decryptText(g.description),
+      price: Number(decryptText(g.price)),
+      email: decryptText(g.email),
+      orderCount: g.orderCount,
+      imageUrl: g.imageUrl ? `http://localhost:4000/${g.imageUrl}` : null,
+      createdAt: g.createdAt,
     }));
 
-    res.json({
-      gigs: gigsWithImageUrl,
+    return res.json({
+      gigs: gigsOut,
       totalPages: Math.ceil(count / limit),
       currentPage: page,
     });
   } catch (error) {
     console.error('Error fetching gigs:', error);
-    res.status(500).json({ success: false, message: 'Failed to load gigs. Please try again.' });
+    return res.status(500).json({ success: false, message: 'Failed to load gigs. Please try again.' });
   }
 });
 
